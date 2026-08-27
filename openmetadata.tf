@@ -26,6 +26,7 @@ resource "docker_container" "openmetadata_server" {
     "PIPELINE_SERVICE_CLIENT_ENDPOINT=http://openmetadata-ingestion:8080",
     "AIRFLOW_USERNAME=admin",
     "AIRFLOW_PASSWORD=admin",
+    "SERVER_HOST_API_URL=http://openmetadata-server:8585/api",
   ]
 
 
