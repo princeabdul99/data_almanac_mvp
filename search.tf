@@ -3,7 +3,7 @@ resource "docker_volume" "elasticsearch_data" {
 }
 
 resource "docker_image" "elasticsearch" {
-  name = "docker.elastic.co/elasticsearch/elasticsearch:8.11.4"
+  name         = "opensearchproject/opensearch:2.11.1"
   keep_locally = true
 }
 
@@ -14,13 +14,13 @@ resource "docker_container" "elasticsearch" {
 
   env = [
     "discovery.type=single-node",
-    "xpack.security.enabled=false",
-    "ES_JAVA_OPTS=-Xms1024m -Xmx1024m",
-  ]
+    "plugins.security.disabled=true",
+    "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m",
+    ]
 
   volumes {
     volume_name = docker_volume.elasticsearch_data.name
-    container_path = "/usr/share/elasticsearch/data"
+    container_path = "/usr/share/opensearch/data"
   }
 
   networks_advanced {
@@ -37,8 +37,8 @@ resource "docker_container" "elasticsearch" {
 
 # --- Pull Kibana (must match Elasticsearch's version exactly)
 resource "docker_image" "kibana" {
-  name = "docker.elastic.co/kibana/kibana:8.11.4"
-  keep_locally = true  
+  name         = "opensearchproject/opensearch-dashboards:2.11.1"
+  keep_locally = true
 }
 
 resource "docker_container" "kibana" {
@@ -47,7 +47,8 @@ resource "docker_container" "kibana" {
   restart = "unless-stopped"
 
   env = [
-    "ELASTICSEARCH_HOSTS=http://openmetadata-elasticsearch:9200",
+    "OPENSEARCH_HOSTS=[\"http://openmetadata-elasticsearch:9200\"]",
+    "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true",
   ]
 
   ports {
