@@ -22,6 +22,10 @@ resource "docker_container" "openmetadata_server" {
     "ELASTICSEARCH_HOST=openmetadata-elasticsearch",
     "ELASTICSEARCH_PORT=9200",
     "ELASTICSEARCH_SCHEME=http",
+    # --ingestion service (airflow) --
+    "PIPELINE_SERVICE_CLIENT_ENDPOINT=http://openmetadata-ingestion:8080",
+    "AIRFLOW_USERNAME=admin",
+    "AIRFLOW_PASSWORD=admin",
   ]
 
 
